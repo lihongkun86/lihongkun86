@@ -1,12 +1,5 @@
 import numpy as np
-def line_y(x,velocity,position):
-    k=velocity[:,1]/velocity[:,0]
-    b=position[:,1]-k*position[:,0]
-    return(k*x+b)
-def line_x(y,velocity,position):
-    k=velocity[:,1]/velocity[:,0]
-    b=position[:,1]-k*position[:,0]
-    return((y-b)/k)
+
 
 class Simul:
     """ 
@@ -20,6 +13,7 @@ class Simul:
         self._i, self._j = np.triu_indices(self.position.shape[0], k=1)  # all pairs of indices between particles
         self.sigma = sigma  # particle radius
         self._sample_time=sample_time
+        self.m=1
         self.bord_large=1
         self.bord_small=0
     # def _wall_time(self,time):
@@ -46,7 +40,7 @@ class Simul:
     #                     self._velocity[posi_index[0][j]]=-self._velocity[posi_index[0][j]]
     #     return collision_time,par_involve,wall
     def _wall_time(self):
-        t=np.where(self._veloctity>0,(self.bord_large-self.sigma-self.position)/self._velocity,\
+        t=np.where(self._velocity>0,(self.bord_large-self.sigma-self.position)/self._velocity,\
                    (self.bord_small+self.sigma-self.position)/self._velocity)
         disk,direction=np.unravel_index(t.argmin(),t.shape)
         return t[disk,direction],disk,direction
@@ -101,12 +95,43 @@ class Simul:
         # wall=wall[index]
         # return collision_time,par_involve,wall
     def _pair_time(self):
-        pass
-
+        rij = self.position[self._i]-self.position[self._j]  # set of all 6 separation vectors
+        vij = self._velocity[self._i]-self._velocity[self._j]
+        rij_sq = (rij**2).sum(1)
+        vij_sq = (vij**2).sum(1)
+        b=2*(rij[:,0]*vij[:,0]+rij[:,1]*vij[:,1])
+        c=rij_sq-4*self.sigma**2
+        solution=(-b+np.sqrt(b**2-4*vij_sq*c))/(2*vij_sq)
+        t=np.where(np.logical_and(b**2-4*vij_sq*c>=0,solution>=0),solution,float('inf'))
+        pair=t.argmin()
+        t_pair=t.min()
+        return t_pair,self._i[pair],self._j[pair]
     def md_step(self):
         print('Simul::md_step')
-        pressure = 0
-        self.position = self.position + self._sample_time * self._velocity
+        momentum = 0
+        time = 0#total time
+        while True:
+            next_wall_time,disk,direction=self._wall_time()
+            next_pair_time,pair1,pair2=self._pair_time()
+            if next_pair_time>next_wall_time:
+                time+=next_wall_time
+                momentum += 2*self.m*self._velocity[disk,direction]
+                self.position += next_wall_time * self._velocity
+                self._velocity[disk,direction]  *=  -1
+            if next_pair_time<next_wall_time:
+                time+=next_pair_time
+                self.position += next_pair_time * self._velocity
+                rij = self.position[pair2]-self.position[pair1]
+                rij_sq = np.sum(rij**2)
+                rij_unit = rij/rij_sq
+                self._velocity[pair1] -= rij_unit*(rij_unit*(self._velocity[pair1]-self._velocity[pair2]))
+                self._velocity[pair2] += rij_unit*(rij_unit*(self._velocity[pair1]-self._velocity[pair2]))
+            
+            if time>self._sample_time:
+                time_to_sample=self._sample_time-(time-min(next_wall_time,next_pair_time))
+                self.position += time_to_sample * self._velocity
+                break
+        pressure = momentum/self._sample_time
         return pressure
 
     def __str__(self):   # this is used to print the position and velocity of the particles
@@ -114,4 +139,4 @@ class Simul:
         v = np.array2string(self._velocity)
         return 'pos= '+p+'\n'+'vel= '+v+'\n'
 po=Simul(10,0.15)
-collision_time,par_involve,wall=po._wall_time()
+print(po.md_step())
