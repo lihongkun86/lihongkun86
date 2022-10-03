@@ -1,22 +1,36 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Oct  3 17:28:08 2022
+
+@author: lihongkun
+"""
+
 import numpy as np
 
 
-class Simul:
+class Simul_n:
     """ 
     This is the prototype of the simulation code
     It moves the particles with at _velocity, using a vector notation: numpy should be used.
     """
-    def __init__(self, sample_time, sigma):
+    def __init__(self, n,sample_time, sigma):
         np.random.seed(1)
         print("Simul init")
-        self.position = np.array([[0.25, 0.25], [0.75, 0.25], [0.25, 0.75], [0.75, 0.75]])  # starting positions
+        self.n=n
+        self.position = np.zeros((self.n,2))  # starting positions
+        self.bord_large=1
+        self.bord_small=0
+        number=int(np.sqrt(self.n))+1
+        ecart=(self.bord_large-self.bord_small)/(number+1)
+        for i in range(self.n):
+            self.position[i]=np.array([(i//number+1)*ecart,(i%number+1)*ecart])
+            
         self._velocity = np.random.normal(size=self.position.shape)  # random velocities
         self._i, self._j = np.triu_indices(self.position.shape[0], k=1)  # all pairs of indices between particles
         self.sigma = sigma  # particle radius
         self._sample_time=sample_time
         self.m=1
-        self.bord_large=1
-        self.bord_small=0
+        
 
     # def _wall_time(self,time):
     #     collision_time=[]
@@ -144,5 +158,3 @@ class Simul:
         p = np.array2string(self.position)
         v = np.array2string(self._velocity)
         return 'pos= '+p+'\n'+'vel= '+v+'\n'
-# simulation = Simul(sample_time=0.01, sigma=0.1)
-# simulation.md_step()

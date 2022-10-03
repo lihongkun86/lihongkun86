@@ -1,10 +1,17 @@
-from simul import Simul
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Oct  3 18:08:39 2022
+
+@author: lihongkun
+"""
+
+from simul_n import Simul_n
 from animatesimul import AnimateSimul
 
 
 def main():
 
-    simulation = Simul(sample_time=0.01, sigma=0.15)  #  sigma particle radius
+    simulation = Simul_n(4,sample_time=0.01, sigma=0.15)  #  sigma particle radius
     print(simulation.__doc__)  # print the documentation from the class
 
     animate = AnimateSimul(simulation)
