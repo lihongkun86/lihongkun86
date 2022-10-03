@@ -23,7 +23,7 @@ class Simul_n:
         number=int(np.sqrt(self.n))+1
         ecart=(self.bord_large-self.bord_small)/(number+1)
         for i in range(self.n):
-            self.position[i]=np.array([(i//number+1)*ecart,(i%number+1)*ecart])
+            self.position[i]=np.array([(i%number+1)*ecart,(i//number+1)*ecart])
             
         self._velocity = np.random.normal(size=self.position.shape)  # random velocities
         self._i, self._j = np.triu_indices(self.position.shape[0], k=1)  # all pairs of indices between particles
