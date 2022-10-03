@@ -20,7 +20,10 @@ class Simul_n:
         self.position = np.zeros((self.n,2))  # starting positions
         self.bord_large=1
         self.bord_small=0
-        number=int(np.sqrt(self.n))+1
+        if np.sqrt(self.n)==int(np.sqrt(self.n)):
+            number=int(np.sqrt(self.n))
+        else:
+            number=int(np.sqrt(self.n))+1
         ecart=(self.bord_large-self.bord_small)/(number+1)
         for i in range(self.n):
             self.position[i]=np.array([(i%number+1)*ecart,(i//number+1)*ecart])

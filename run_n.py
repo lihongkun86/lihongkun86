@@ -11,11 +11,11 @@ from animatesimul import AnimateSimul
 
 def main():
 
-    simulation = Simul_n(500,sample_time=0.01, sigma=0.02)  #  sigma particle radius
+    simulation = Simul_n(4,sample_time=0.01, sigma=0.15)  #  sigma particle radius
     print(simulation.__doc__)  # print the documentation from the class
 
     animate = AnimateSimul(simulation)
-    animate.go(nframes=500)
+    animate.go(nframes=100)
     print(simulation)  #  print last configuration to screen
 
 
