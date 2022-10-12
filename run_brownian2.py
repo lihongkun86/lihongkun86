@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Oct  3 18:08:39 2022
+Created on Wed Oct 12 02:31:45 2022
 
 @author: lihongkun
 """
 
-from simul_n import Simul_n
-from animatesimul import AnimateSimul
+from brownian2 import Simul_brownian2
+from brownian_animatesimul2 import AnimateSimul
 
 
 def main():
 
-    simulation = Simul_n(20,sample_time=0.01, sigma=0.05)  #  sigma particle radius
+    simulation = Simul_brownian2(n=150,sample_time=0.01, sigma_small=0.01,sigma_big=0.3)  #  sigma particle radius
     print(simulation.__doc__)  # print the documentation from the class
 
     animate = AnimateSimul(simulation)
-    animate.go(nframes=100)
+    animate.go(nframes=500)
     print(simulation)  #  print last configuration to screen
 
 
