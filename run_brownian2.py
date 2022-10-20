@@ -11,7 +11,7 @@ from brownian_animatesimul2 import AnimateSimul
 
 def main():
 
-    simulation = Simul_brownian2(n=150,sample_time=0.01, sigma_small=0.01,sigma_big=0.3)  #  sigma particle radius
+    simulation = Simul_brownian2(n=100,sample_time=0.01, sigma_small=0.01,sigma_big=0.2)  #  sigma particle radius
     print(simulation.__doc__)  # print the documentation from the class
 
     animate = AnimateSimul(simulation)
