@@ -14,8 +14,8 @@ class Simul_brownian2:
     It moves the particles with at _velocity, using a vector notation: numpy should be used.
     """
     def __init__(self, n,sample_time, sigma_small,sigma_big,m_h=20):
-        np.random.seed(1)
-        print("Simul init")
+  
+        # print("Simul init")
         self.n=n
         self.position = np.zeros((self.n+1,2))  # starting positions
         self.bord_large=1
@@ -97,9 +97,10 @@ class Simul_brownian2:
         return t_pair,pair1,pair2
         
     def md_step(self):
-        print('Simul::md_step')
+        # print('Simul::md_step')
         momentum = 0
         time = 0#total time
+        position0=copy.deepcopy(self.position[0,:])
         while True:
             next_wall_time,disk,direction=self._wall_time()
             next_pair_time,pair1,pair2=self._pair_time()
@@ -128,8 +129,9 @@ class Simul_brownian2:
                 
         time_to_sample=self._sample_time-time
         self.position += time_to_sample * self._velocity
+        msd=((self.position[0,:]-position0)**2).sum()
         pressure = momentum/self._sample_time
-        return pressure
+        return pressure,msd
 
     def __str__(self):   # this is used to print the position and velocity of the particles
         p = np.array2string(self.position)
