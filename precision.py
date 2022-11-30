@@ -69,20 +69,13 @@ print(x21,x22,x22-x21)
 # plt.xlabel('N')
 # plt.ylabel('t')
 ############
-def factor(n):
-    if n==0:
-        return 1
-    if n>0:
-        return n*factor(n-1)
 
-def u(x,n):
-    return x**(2*n)/(factor(2*n))
 def S(x,N):
     s=1
     ss=1
     for i in range(1,N+1):
-        s=((-1)**i)*(x**2/((2*(i-1)+2)*(2*(i-1)+1)))*s
-        ss+=s
+        s=(x**2/((2*(i-1)+2)*(2*(i-1)+1)))*s
+        ss+=((-1)**i)*s
     return(ss)
 x=1.5
 long=85
@@ -91,7 +84,7 @@ cst=np.ones(long)*np.cos(x)
 ss=[]
 for j in nn:
     s=S(x,j)
-
+    
     ss.append(s)
 plt.plot(nn,ss)
 plt.plot(nn,cst)
