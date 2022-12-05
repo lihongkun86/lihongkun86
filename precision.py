@@ -77,7 +77,7 @@ def S(x,N):
         s=(x**2/((2*(i-1)+2)*(2*(i-1)+1)))*s
         ss+=((-1)**i)*s
     return(ss)
-x=1.5
+x=1
 long=85
 nn=[k for k in range(long)]
 cst=np.ones(long)*np.cos(x)
