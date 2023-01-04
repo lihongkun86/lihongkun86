@@ -68,7 +68,11 @@ plt.ylabel('err')
 plt.figure(3)
 def A(j,N,x_random):
     x_r=np.delete(copy.deepcopy(x_random),j)
-    P=np.poly1d(x_r,True)
+    x_rd=x_r-x_random[j]
+    a=1
+    for i in range(np.shape(x_rd)[0]):
+        a*=x_rd[i]
+    P=np.poly1d(x_r/a,True)
     return(P.coeffs)
 def P(x,j,N,x_random):
     P=np.poly1d(A(j,N,x_random))
