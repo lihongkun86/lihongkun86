@@ -111,14 +111,25 @@ plt.ylabel('amplitude')
 plt.xlabel('f(Hz)')
 plt.legend()
 ####convolution
-def door(t):
-    if t>=0 and t<=1/2:
-        return 1
-    else:
-        0
+def door(x):
+    xx=np.zeros(x.shape)
+    for i in range(np.shape(x)[0]):
+        if np.logical_and(x[i]>=0,x[i]<=N*detat/2):
+            xx[i]=1
+        else:
+            xx[i]=0
+    return xx
 N=900
 t=np.arange(0,N*detat,detat)
 arf=np.pi/np.log(2)*(bw*fc/2)**2
 sj=np.sin(2*np.pi*fc*t)*np.exp(-arf*t**2)
 do=door(t)
 cov=np.fft.ifft(np.fft.fft(sj)*np.fft.fft(do))
+cov1=np.convolve(do,sj,'full')
+plt.figure(7)
+plt.plot(t,cov,label='theory')
+plt.plot(t,cov1[:N],label='convolution in python')
+plt.ylabel('amplitude')
+plt.xlabel('t(s)')
+plt.title('convoution of the signal and the door function')
+plt.legend()
