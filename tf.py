@@ -14,7 +14,7 @@ fc=1e6
 bw=1
 detat=1/fe
 N=200
-t=np.arange(0,N*detat,detat)
+t=np.arange(-N*detat,N*detat,detat)
 arf=np.pi/np.log(2)*(bw*fc/2)**2
 sj=np.sin(2*np.pi*fc*t)*np.exp(-arf*t**2)
 plt.figure(1)
